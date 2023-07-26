@@ -24,4 +24,4 @@ read_secret_result = client.secrets.kv.v2.read_secret(
     mount_point=mount_point
 )
 
-print(read_secret_result['data']['data']['password'])                                                       
+print(read_secret_result['data']['password'])                                                       
