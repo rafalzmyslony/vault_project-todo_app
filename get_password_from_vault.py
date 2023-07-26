@@ -1,20 +1,27 @@
-import os
+import boto3
 import hvac
+import os
 
-# Initialize the Vault client
-client = hvac.Client()
+'''
+Script prints password from HCP Vault kept in this path: kv/data/db/todo_app from field password (kv/data/db/todo_app/password
 
-# Configure the Vault client with the appropriate authentication method
-client.auth.aws_ec2_role(role='vault-role-for-aws-ec2role')
+'''
+_VAULT_ADDRESS = os.getenv('VAULT_ADDR')
 
-# Fetch the password from Vault
-result = client.secrets.kv.v2.read_secret_version(path='kv/db/todo_app')
+# get credentials from EC2 metadata (vault is auth via IAM role)
+session = boto3.Session()
+credentials = session.get_credentials()
 
-# Extract the password from the response
-password = result['data']['data']['password']
 
-# Set the password as an environment variable
-os.environ['DB_PASSWORD'] = password
+client = hvac.Client(url=_VAULT_ADDRESS)
+client.auth.aws.iam_login(credentials.access_key, credentials.secret_key, credentials.token, role='vault-role-for-aws-ec2role')
+# Fetch the secret data from Vault
+mount_point = 'kv'
+secret_path = 'db/todo_app'
 
-# Print the password to verify
-print(f"DB_PASSWORD: {os.getenv('DB_PASSWORD')}")
+read_secret_result = client.secrets.kv.v2.read_secret(
+    path=secret_path,
+    mount_point=mount_point
+)
+
+print(read_secret_result['data']['data']['password'])                                                       
