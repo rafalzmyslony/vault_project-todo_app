@@ -59,7 +59,7 @@ def get_pass_vault():
 
     for i, line in enumerate(lines):
         if 'DB_PASSWORD' in line:
-            lines[i] = 'DB_PASSWORD='+format(password)
+            lines[i] = 'DB_PASSWORD='+format(password)+'\n'
             with open(_todo_env_location, "w") as f:
                 f.writelines(lines)
             f.close()
