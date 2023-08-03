@@ -60,7 +60,7 @@ if get_pass_vault() == True:
 else:
     @app.route('/', methods=['GET'])
     def index():
-        message ="HCP Vault doesn't work - did not return password"
+        message ="HCP Vault doesn't work - did not return password. I think, you should first run ansible playbook - playbook-todoapp"
         return render_template('error.html', message=message)
     
 if __name__ == '__main__':
