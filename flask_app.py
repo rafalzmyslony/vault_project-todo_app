@@ -19,9 +19,11 @@ def create_db_connection():
         print(f"Error: {e}")
         return None
     
-# Get PostgreSQL connection details from environment variables
 
 if get_pass_vault() == True:
+    '''
+    True when function from get_pass_from_vault.py will connect to Vault and get sercret
+    '''
     conn = create_db_connection()
     if conn is not None:
             
